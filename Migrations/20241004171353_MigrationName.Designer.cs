@@ -11,8 +11,8 @@ using sew.Database;
 namespace sew.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241002161402_init")]
-    partial class init
+    [Migration("20241004171353_MigrationName")]
+    partial class MigrationName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
