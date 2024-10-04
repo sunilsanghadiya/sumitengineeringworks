@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using sew;
 using sew.Database;
+using sew.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,7 +55,9 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 // Middleware to enable authentication
-// app.UseMiddleware<AuthMiddleware>();
+app.UseMiddleware<AuthMiddleware>();
+
+app.MapControllers();
 
 app.Run();
 
