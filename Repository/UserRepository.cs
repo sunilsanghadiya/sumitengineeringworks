@@ -12,6 +12,7 @@ public interface IUserRepository
     Task<Users> UpdateUser(Users users);
     Task<Users> LoginUser(LoginDto loginDto);
     Task<Users?> Register(Users users);
+    Task<Users?> GetUserByEmailId(string emailId);
 }
 
 public class UserRepository : IUserRepository
@@ -72,5 +73,10 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
 
         return users;
+    }
+
+    public async Task<Users?> GetUserByEmailId(string emailId) 
+    {
+        return await _context.Users.FirstOrDefaultAsync(u => u.Email == emailId && !u.IsDeleted);
     }
 }
