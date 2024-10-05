@@ -1,19 +1,26 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using sew;
 using sew.Database;
+using sew.Helpers;
 using sew.Middlewares;
+using sew.Repository;
+using sew.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 
+var configurations = builder.Configuration;
+
 builder.Services.AddDbContext<AppDbContext>(option => 
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+//Config settings inject
+builder.Services.Configure<ServiceSettings>(configurations.GetSection("ServiceSettings"));
+
 
 #region JWT Service add
 var key = Encoding.ASCII.GetBytes("sdfs^&&#%GFHeyf456fffWEWRCCxstr6wecewr673674rfhsdvfyu3r46R%E%TSFdsdfsdf");
@@ -34,6 +41,10 @@ builder.Services.AddAuthentication(options => {
 });
 #endregion
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<EmailSenderService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -43,6 +54,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
