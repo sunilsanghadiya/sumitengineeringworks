@@ -96,6 +96,8 @@ public class UserService : IUserService
         Result? result = new();
         try 
         {
+            Users? newUser = new();
+
             #region API VALIDATIONS
             if(string.IsNullOrWhiteSpace(registerDto.Email))
             {
@@ -111,23 +113,58 @@ public class UserService : IUserService
             }
             #endregion
 
-            Users? newUser = new()
+            newUser = new()
             {
                 FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName,
                 Email = registerDto.Email,
                 MobileNo = registerDto.MobileNumber,
                 Gender = registerDto.Gender,
-                IsActive = true,
+                IsActive = false,
                 IsAdmin = false,
                 Created = DateTime.UtcNow,
                 IsDeleted = false,
+                IsVerifiedUser = false,
                 Password = CustomPasswordHasher.HashPassword(registerDto.Password)
             };
+            
+            #region  OTP Send And Verify
+            if(newUser != null) 
+            {
+                OTPPayload? otpPayload = new()
+                {
+                    Email = newUser.Email
+                };
+
+                result = RegisterUserOTP(otpPayload);
+                if(result.HasError)
+                {
+                    return new Result("An error occurred while RegisterUserOTP");
+                }
+                
+                newUser.OTP = result.ResultObject?.ToString();
+            }
+            #endregion
 
             newUser = await _userRepository.Register(newUser);
 
-            result.ResultObject = newUser;
+            if(newUser != null) 
+            {
+                newUser = await _userRepository.GetUserByID(newUser.ID);
+            }
+
+            if(newUser?.OTP == registerDto.OTP) 
+            {
+                newUser.IsActive = true;
+                newUser.IsVerifiedUser = true;
+                newUser.OTPExpireDate = DateTime.UtcNow;
+                await _userRepository.SaveUser(newUser);
+                result.ResultObject = newUser;
+            }
+            else 
+            {
+                return new Result("Provided OTP is not valid please try again !");
+            }
                 
             return result;
         }

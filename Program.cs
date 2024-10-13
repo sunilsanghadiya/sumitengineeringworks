@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using sew;
 using sew.Database;
 using sew.Helpers;
@@ -47,7 +48,32 @@ builder.Services.AddScoped<EmailSenderService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c => {
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "SumitEngineeringWorks", Version = "v1" });
+    c.AddSecurityDefinition("Authorization Token", new OpenApiSecurityScheme()
+    {
+        Description = "Authorization Token (Example: eg67t34refgvgfdfgsgfDrtfsgfee545)",
+        Name = "AuthorizatioToken",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Authorization Token"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Authorization Token"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 
@@ -65,6 +91,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseStatusCodePages();
 
 // Middleware to enable authentication
 app.UseMiddleware<AuthMiddleware>();
