@@ -13,4 +13,7 @@ public class Users
     public bool IsAdmin { get; set; }
     public bool IsDeleted { get; set; }
     public DateTime Created { get; set; }
+    public string? OTP { get; set; }
+    public DateTime? OTPExpireDate { get; set; }
+    public bool IsVerifiedUser { get; set; }
 }

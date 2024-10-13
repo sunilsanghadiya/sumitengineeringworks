@@ -1,5 +1,13 @@
 global using System;
 global using System.Text;
 global using Microsoft.EntityFrameworkCore;
-global using  sew.Commons;
+global using sew.Commons;
 global using static sew.Commons.Config;
+global using System.IdentityModel.Tokens.Jwt;
+global using Microsoft.Extensions.Primitives;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Mvc;
+global using sew.Models.Dtos;
+global using sew.Services;
+global using static sew.Models.Dtos.OTPDto;

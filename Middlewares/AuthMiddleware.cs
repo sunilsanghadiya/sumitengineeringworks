@@ -1,6 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.Extensions.Primitives;
-
 namespace sew.Middlewares;
 
 public class AuthMiddleware
@@ -23,7 +20,7 @@ public class AuthMiddleware
         }
 
         var token = authHeader.FirstOrDefault()?.Split(" ").Last();
-        if(string.IsNullOrWhiteSpace(token) || !validateJwtToken(token))
+        if(string.IsNullOrWhiteSpace(token) || !ValidateJwtToken(token))
         {
             context.Response.StatusCode = 401;
             await context.Response.WriteAsync("Invalid or missing token");
@@ -33,7 +30,7 @@ public class AuthMiddleware
         await _next(context);
     }
 
-    private bool validateJwtToken(string token)
+    private bool ValidateJwtToken(string token)
     {
         try
         {
