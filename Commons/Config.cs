@@ -6,9 +6,9 @@ public class Config
 {
     public class ServiceSettings
     {
-        public string accessToken { get; set; }
-        public MailSettings mailSettings { get; set; }
-        public OTPEmailTemplate? oTPEmailTemplate { get; set; }
+        public string? AccessToken { get; set; }
+        public MailSettings? MailSettings { get; set; }
+        public OTPEmailTemplate? OTPEmailTemplate { get; set; }
     }
 
     public class OTPEmailTemplate

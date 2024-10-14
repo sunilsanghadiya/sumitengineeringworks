@@ -13,15 +13,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-var configurations = builder.Configuration;
-
 builder.Services.AddDbContext<AppDbContext>(option => 
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 //Config settings inject
-builder.Services.Configure<ServiceSettings>(configurations.GetSection("ServiceSettings"));
+builder.Services.Configure<ServiceSettings>(builder.Configuration.GetSection("ServiceSettings"));
 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 #region JWT Service add
 var key = Encoding.ASCII.GetBytes("sdfs^&&#%GFHeyf456fffWEWRCCxstr6wecewr673674rfhsdvfyu3r46R%E%TSFdsdfsdf");
