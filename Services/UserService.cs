@@ -185,13 +185,13 @@ public class UserService : IUserService
             }
 
             string otp = Utility.Utility.GenderateRandomNo(6);
-            string? emailBody = _serviceSettings.oTPEmailTemplate?.Body;
+            string? emailBody = _serviceSettings.OTPEmailTemplate?.Body;
             emailBody = emailBody?.Replace("{{OTP}}", otp);
 
             EmailDto? emailDto = new()
             {
                 ToEmail = oTPPayload.Email,
-                EmailSubject = _serviceSettings.oTPEmailTemplate?.Subject ?? "SAMPLE_SUBJECT",
+                EmailSubject = _serviceSettings.OTPEmailTemplate?.Subject ?? "SAMPLE_SUBJECT",
                 EmailBody = emailBody ?? string.Empty,
             };
 

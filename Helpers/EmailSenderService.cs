@@ -15,13 +15,13 @@ namespace sew.Helpers
 
     public class EmailSenderService 
     {
-        private readonly ServiceSettings _serviceSettings;
+        public readonly ServiceSettings _serviceSettings;
         public EmailSenderService(IOptions<ServiceSettings> serviceSettings)
         {
             _serviceSettings = serviceSettings.Value;
         }
 
-        private Result SendAMail(MailAddress fromMailAddress, string toMailAddress, string subject, string body, int typeID)
+        public Result SendAMail(MailAddress fromMailAddress, string toMailAddress, string subject, string body, int typeID)
         {
             Result result = new();
             try
@@ -49,7 +49,7 @@ namespace sew.Helpers
             return result;
         }
 
-        private Result SendMails(MailAddress fromMailAddress, List<MailAddress> toMailAddresses, List<MailAddress> ccMailAddresses, List<MailAddress> bccMailAddresses, string subject, string body, List<Attachment>? attachments, int typeID)
+        public Result SendMails(MailAddress fromMailAddress, List<MailAddress> toMailAddresses, List<MailAddress> ccMailAddresses, List<MailAddress> bccMailAddresses, string subject, string body, List<Attachment>? attachments, int typeID)
         {
             Result result = new();
             try
@@ -116,7 +116,7 @@ namespace sew.Helpers
         {
             try
             {
-                MailAddress fromMail = new(_serviceSettings.mailSettings.SmtpFromEmailAddress, _serviceSettings.mailSettings.SmtpFromName);
+                MailAddress fromMail = new(_serviceSettings.MailSettings?.SmtpFromEmailAddress, _serviceSettings.MailSettings.SmtpFromName);
 
                 string toEmailAddress = emailDto.ToEmail;
 
@@ -146,7 +146,7 @@ namespace sew.Helpers
                 List<MailAddress> ccMails = new();
                 List<MailAddress> bccMails = new();
 
-                // #region  CC Mail Address
+                #region  CC Mail Address
                 // if (!string.IsNullOrWhiteSpace(emailDto.CcEmail))
                 // {
                 //     if (emailDto.CcEmail.Contains(_serviceSettings.mailSettings.EmailSeparator))
@@ -165,7 +165,7 @@ namespace sew.Helpers
                 //         ccMails.Add(new MailAddress(emailDto.CcEmail));
                 //     }
                 // }
-                // #endregion
+                #endregion
 
                 #region BCC Mail Addresses
                 // if (!string.IsNullOrEmpty(emailDto.BccEmail))
@@ -206,7 +206,7 @@ namespace sew.Helpers
         private SmtpClient GetSmtpClient()
         {
             SmtpClient smtpClient = new();
-            MailSettings smtpConfig = _serviceSettings.mailSettings;
+            MailSettings smtpConfig = _serviceSettings.MailSettings;
             if (!String.IsNullOrEmpty(smtpConfig.SmtpUserName) && !String.IsNullOrEmpty(smtpConfig.SmtpPassword))
             {
                 NetworkCredential networkCredential = new(smtpConfig.SmtpUserName, smtpConfig.SmtpPassword);
