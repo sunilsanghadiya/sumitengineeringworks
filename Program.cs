@@ -92,8 +92,6 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.UseStatusCodePages();
-
 // Middleware to enable authentication
 app.UseMiddleware<AuthMiddleware>();
 

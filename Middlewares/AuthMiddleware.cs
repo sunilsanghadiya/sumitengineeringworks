@@ -12,6 +12,11 @@ public class AuthMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
+        if(context.Request.Path.Value.Contains("/api/auth"))
+        {
+            await _next.Invoke(context);
+        }
+
         if(context.Request.Headers.TryGetValue("Authorization", out StringValues authHeader)) 
         {
             context.Response.StatusCode = 401;
