@@ -23,7 +23,7 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
-    private readonly ServiceSettings _serviceSettings;
+    public readonly ServiceSettings _serviceSettings;
     private readonly EmailSenderService _emailSenderService;
 
 
@@ -185,13 +185,13 @@ public class UserService : IUserService
             }
 
             string otp = Utility.Utility.GenderateRandomNo(6);
-            string? emailBody = _serviceSettings.oTPEmailTemplate.Body;
+            string? emailBody = _serviceSettings.oTPEmailTemplate?.Body;
             emailBody = emailBody?.Replace("{{OTP}}", otp);
 
             EmailDto? emailDto = new()
             {
                 ToEmail = oTPPayload.Email,
-                EmailSubject = _serviceSettings.oTPEmailTemplate.Subject,
+                EmailSubject = _serviceSettings.oTPEmailTemplate?.Subject ?? "SAMPLE_SUBJECT",
                 EmailBody = emailBody ?? string.Empty,
             };
 
